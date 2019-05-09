@@ -1,7 +1,8 @@
-package spork
+package users
 
 import (
 	"log"
+	"spork/postgres"
 	"testing"
 )
 
@@ -10,19 +11,18 @@ func check(err error) {
 		log.Fatal(err)
 	}
 }
-func TestDb(t *testing.T) {
-	db := GetDB()
-	err := db.Ping()
-	check(err)
-	row := db.QueryRow("select 1;")
-	var res int
-	check(row.Scan(&res))
-	log.Print(res)
+
+var service Service
+
+func init() {
+	db := postgres.InitDB()
+	store := NewStore(db)
+	service = NewService(store)
 }
 
 func TestCreateUser(t *testing.T) {
-	id, err := CreateUser(
-		"olexiy.tkachenko+2@gmail.com",
+	id, err := service.CreateUser(
+		"olexiy.tkachenko+3@gmail.com",
 		"testpassword",
 		"o.tkachenkp",
 	)
@@ -34,7 +34,7 @@ func TestCreateUser(t *testing.T) {
 }
 
 func TestLoginFailed(t *testing.T) {
-	token, err := Login(
+	token, err := service.Login(
 		"olexiy.tkachenko@gmail.com",
 		"incorrectpassword",
 	)
@@ -44,7 +44,7 @@ func TestLoginFailed(t *testing.T) {
 }
 
 func TestLogin(t *testing.T) {
-	token, err := Login(
+	token, err := service.Login(
 		"olexiy.tkachenko@gmail.com",
 		"testpassword",
 	)

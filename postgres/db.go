@@ -1,4 +1,4 @@
-package spork
+package postgres
 
 import (
 	"database/sql"
@@ -7,18 +7,11 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var db *sql.DB
-
-func init() {
+func InitDB() *sql.DB {
 	connStr := "user=postgres password=postgres dbname=postgres sslmode=disable"
-	var err error
-	db, err = sql.Open("postgres", connStr)
+	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal("cannot connect to db")
 	}
-}
-
-//GetDB - returns db instance
-func GetDB() *sql.DB {
 	return db
 }

@@ -1,4 +1,4 @@
-package spork
+package users
 
 import (
 	"fmt"

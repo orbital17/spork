@@ -1,6 +1,16 @@
-package spork
+package users
 
-func newUser(u User) (id UserID, err error) {
+import "database/sql"
+
+type Store struct {
+	db *sql.DB
+}
+
+func NewStore(db *sql.DB) Store {
+	return Store{db}
+}
+
+func (store *Store) AddUser(u User) (id UserID, err error) {
 
 	query := `INSERT INTO
 	  postgres.public.users (date_added, name, password, email)
@@ -11,21 +21,19 @@ func newUser(u User) (id UserID, err error) {
 		$2,
 		$3
 	  ) RETURNING id;`
-	db := GetDB()
-	res := db.QueryRow(query, u.name, u.passwordHash, u.email)
+	res := store.db.QueryRow(query, u.name, u.passwordHash, u.email)
 	var lastID int64
 	err = res.Scan(&lastID)
 	return UserID(lastID), err
 }
 
-func userByEmail(email string) (User, error) {
+func (store *Store) UserByEmail(email string) (User, error) {
 	query := `select
 		id, name, email, password
 	from
 		users
 	where email = $1; `
-	db := GetDB()
-	res := db.QueryRow(query, email)
+	res := store.db.QueryRow(query, email)
 	var u User
 	err := res.Scan(
 		&u.id,
