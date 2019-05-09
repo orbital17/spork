@@ -1,38 +1,51 @@
 package users
 
 import (
-	"fmt"
+	"strconv"
+	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/gbrlsnchs/jwt/v3"
 )
 
-var secret []byte = []byte("jwtsecret")
+var hs256 = jwt.NewHMAC(jwt.SHA256, []byte("jwtsecret"))
 
 func NewToken(user User) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"userId": user.id,
-	})
-	return token.SignedString(secret)
-}
-
-func keyFunc(token *jwt.Token) (interface{}, error) {
-	// Don't forget to validate the alg is what you expect:
-	if m, ok := token.Method.(*jwt.SigningMethodHMAC); !ok || m != jwt.SigningMethodHS256 {
-		return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+	now := time.Now()
+	h := jwt.Header{}
+	p := jwt.Payload{
+		// Issuer:         "gbrlsnchs",
+		// Audience:       jwt.Audience{"https://golang.org", "https://jwt.io"},
+		// JWTID:          "foobar",
+		Subject:        strconv.Itoa(int(user.id)),
+		ExpirationTime: now.Add(24 * 30 * 12 * time.Hour).Unix(),
+		NotBefore:      now.Add(30 * time.Minute).Unix(),
+		IssuedAt:       now.Unix(),
 	}
-	return secret, nil
+	token, err := jwt.Sign(h, p, hs256)
+	if err != nil {
+		return "", err
+	}
+	return string(token), nil
 }
 
 func ParseToken(tokenString string) (UserID, error) {
-	token, err := jwt.Parse(tokenString, keyFunc)
+	raw, err := jwt.Parse([]byte(tokenString))
 	if err != nil {
 		return 0, err
 	}
-
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		return UserID(claims["userId"].(int64)), nil
-	} else {
+	if err = raw.Verify(hs256); err != nil {
 		return 0, err
 	}
-
+	var (
+		p jwt.Payload
+	)
+	_, err = raw.Decode(&p)
+	if err != nil {
+		return 0, err
+	}
+	id, err := strconv.Atoi(p.Subject)
+	if err != nil {
+		return 0, err
+	}
+	return UserID(id), nil
 }

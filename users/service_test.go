@@ -55,16 +55,12 @@ func TestLogin(t *testing.T) {
 	log.Printf("user token: %v", token)
 }
 
-func TestNewToken(t *testing.T) {
+func TestToken(t *testing.T) {
 	token, err := NewToken(User{
-		id: 3,
+		id: 345,
 	})
 	check(err)
 	t.Logf("user token: %v", token)
-}
-
-func TestParseToken(t *testing.T) {
-	token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjN9.hqg8qt7gaEfrxaPujYENQ8pSaO-stU_LW1tzRNVgGx8"
 	id, err := ParseToken(token)
 	check(err)
 	t.Logf("user id: %v", id)
