@@ -24,3 +24,5 @@ select
 	from
 		users
   where email = 'olexiy.tkachenko@gmail.com'
+
+select * from posts;

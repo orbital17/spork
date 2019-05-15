@@ -8,3 +8,10 @@ CREATE TABLE users (
   date_added timestamp default NULL,
   data JSON
 );
+
+CREATE TABLE posts (
+  id bigserial primary key,
+  date_added timestamp default NULL,
+  data JSON,
+  body text
+);
