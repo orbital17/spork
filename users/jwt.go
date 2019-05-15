@@ -13,12 +13,8 @@ func NewToken(user User) (string, error) {
 	now := time.Now()
 	h := jwt.Header{}
 	p := jwt.Payload{
-		// Issuer:         "gbrlsnchs",
-		// Audience:       jwt.Audience{"https://golang.org", "https://jwt.io"},
-		// JWTID:          "foobar",
 		Subject:        strconv.Itoa(int(user.id)),
-		ExpirationTime: now.Add(24 * 30 * 12 * time.Hour).Unix(),
-		NotBefore:      now.Add(30 * time.Minute).Unix(),
+		ExpirationTime: now.Add(24 * 30 * time.Hour).Unix(),
 		IssuedAt:       now.Unix(),
 	}
 	token, err := jwt.Sign(h, p, hs256)
@@ -41,6 +37,12 @@ func ParseToken(tokenString string) (UserID, error) {
 	)
 	_, err = raw.Decode(&p)
 	if err != nil {
+		return 0, err
+	}
+	now := time.Now()
+	iatValidator := jwt.IssuedAtValidator(now)
+	expValidator := jwt.ExpirationTimeValidator(now, true)
+	if err := p.Validate(iatValidator, expValidator); err != nil {
 		return 0, err
 	}
 	id, err := strconv.Atoi(p.Subject)

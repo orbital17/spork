@@ -1,7 +1,9 @@
 package postgres
 
 import (
+	"database/sql"
 	"log"
+	"spork/config"
 	"testing"
 )
 
@@ -11,8 +13,13 @@ func check(err error) {
 	}
 }
 
+func getDb() *sql.DB {
+	config := config.Default()
+	return Init(config)
+}
+
 func TestDb(t *testing.T) {
-	db := InitDB()
+	db := getDb()
 	err := db.Ping()
 	check(err)
 	row := db.QueryRow("select 1;")

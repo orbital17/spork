@@ -11,11 +11,11 @@ var emailRegexp = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0
 var ErrBadEmailFormat = errors.New("invalid email format")
 
 type Service struct {
-	store Store
+	store *Store
 }
 
-func NewService(store Store) Service {
-	return Service{store}
+func NewService(store *Store) *Service {
+	return &Service{store}
 }
 
 func (service *Service) CreateUser(

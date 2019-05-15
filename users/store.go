@@ -6,8 +6,8 @@ type Store struct {
 	db *sql.DB
 }
 
-func NewStore(db *sql.DB) Store {
-	return Store{db}
+func NewStore(db *sql.DB) *Store {
+	return &Store{db}
 }
 
 func (store *Store) AddUser(u User) (id UserID, err error) {

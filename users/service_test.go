@@ -2,6 +2,7 @@ package users
 
 import (
 	"log"
+	"spork/config"
 	"spork/postgres"
 	"testing"
 )
@@ -12,10 +13,11 @@ func check(err error) {
 	}
 }
 
-var service Service
+var service *Service
 
 func init() {
-	db := postgres.InitDB()
+	config := config.Default()
+	db := postgres.Init(config)
 	store := NewStore(db)
 	service = NewService(store)
 }
