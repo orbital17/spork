@@ -1,19 +1,18 @@
 package containers
 
 import (
-	"spork/users"
+	grpc "spork/grpc"
 )
 
 type App struct {
-	UserStore   *users.Store
-	UserService *users.Service
+	GrpcRunner *grpc.Runner
 }
 
-func NewApp(store *users.Store, service *users.Service) *App {
-	app := App{store, service}
+func NewApp(grpcRunner *grpc.Runner) *App {
+	app := App{grpcRunner}
 	return &app
 }
 
 func (app *App) Run() {
-
+	app.GrpcRunner.Run()
 }

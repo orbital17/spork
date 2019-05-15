@@ -1,8 +1,8 @@
-package spork
+package main
 
 import "spork/containers"
 
-func Main() {
+func main() {
 	app := containers.InitApp()
 	app.Run()
 }
