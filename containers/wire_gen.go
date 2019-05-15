@@ -7,7 +7,7 @@ package containers
 
 import (
 	"spork/config"
-	grpc_api "spork/grpc"
+	"spork/grpc"
 	"spork/postgres"
 	"spork/users"
 )
@@ -19,7 +19,7 @@ func InitApp() *App {
 	db := postgres.Init(configConfig)
 	store := users.NewStore(db)
 	service := users.NewService(store)
-	server := grpc_api.NewServer(service)
+	server := grpc_api.NewServer(service, store)
 	runner := grpc_api.NewRunner(server)
 	app := NewApp(runner)
 	return app
