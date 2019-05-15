@@ -21,7 +21,7 @@ func (store *Store) AddUser(u User) (id UserID, err error) {
 		$2,
 		$3
 	  ) RETURNING id;`
-	res := store.db.QueryRow(query, u.name, u.passwordHash, u.email)
+	res := store.db.QueryRow(query, u.Name, u.PasswordHash, u.Email)
 	var lastID int64
 	err = res.Scan(&lastID)
 	return UserID(lastID), err
@@ -36,10 +36,10 @@ func (store *Store) UserByEmail(email string) (User, error) {
 	res := store.db.QueryRow(query, email)
 	var u User
 	err := res.Scan(
-		&u.id,
-		&u.name,
-		&u.email,
-		&u.passwordHash,
+		&u.Id,
+		&u.Name,
+		&u.Email,
+		&u.PasswordHash,
 	)
 	return u, err
 }

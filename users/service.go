@@ -34,9 +34,9 @@ func (service *Service) CreateUser(
 		return
 	}
 	return service.store.AddUser(User{
-		email:        email,
-		passwordHash: string(hash),
-		name:         name,
+		Email:        email,
+		PasswordHash: string(hash),
+		Name:         name,
 	})
 }
 
@@ -51,7 +51,7 @@ func (service *Service) Login(
 	if err != nil {
 		return
 	}
-	err = bcrypt.CompareHashAndPassword([]byte(user.passwordHash), []byte(password))
+	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
 	if err != nil {
 		return
 	}

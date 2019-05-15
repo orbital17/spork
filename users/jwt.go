@@ -13,7 +13,7 @@ func NewToken(user User) (string, error) {
 	now := time.Now()
 	h := jwt.Header{}
 	p := jwt.Payload{
-		Subject:        strconv.Itoa(int(user.id)),
+		Subject:        strconv.Itoa(int(user.Id)),
 		ExpirationTime: now.Add(24 * 30 * time.Hour).Unix(),
 		IssuedAt:       now.Unix(),
 	}
