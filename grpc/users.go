@@ -2,7 +2,6 @@ package grpc_api
 
 import (
 	context "context"
-	fmt "fmt"
 	"spork/users"
 
 	codes "google.golang.org/grpc/codes"
@@ -31,8 +30,8 @@ func (*Users) CreateUser(ctx context.Context, req *CreateUserRequest) (*CreateUs
 }
 
 func (s *Users) FindByEmail(ctx context.Context, req *FindByEmailRequest) (*User, error) {
-	auth, _ := users.FromContext(ctx)
-	fmt.Printf("id from context: %v", auth.UserID)
+	// auth, _ := users.FromContext(ctx)
+	// fmt.Printf("id from context: %v\n", auth.UserID)
 	user, err := s.UserStore.UserByEmail(req.Email)
 	if err != nil {
 		return nil, err
@@ -43,4 +42,14 @@ func (s *Users) FindByEmail(ctx context.Context, req *FindByEmailRequest) (*User
 		Name:  user.Name,
 	}
 	return res, nil
+}
+
+func (s *Users) OptionalAuth(fullMethod string) bool {
+	switch fullMethod {
+	case "/Users/Login":
+		return true
+	case "/Users/CreateUser":
+		return true
+	}
+	return false
 }

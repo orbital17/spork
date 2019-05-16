@@ -28,6 +28,10 @@ func auth(ctx context.Context) (auth *users.Auth, err error) {
 	return auth, nil
 }
 
+type serverOptionalAuth interface {
+	OptionalAuth(fullMethod string) bool
+}
+
 func authUnaryInterceptor(
 	ctx context.Context,
 	req interface{},
@@ -36,6 +40,11 @@ func authUnaryInterceptor(
 ) (interface{}, error) {
 	auth, err := auth(ctx)
 	if err != nil {
+		if optServer, ok := info.Server.(serverOptionalAuth); ok {
+			if optServer.OptionalAuth(info.FullMethod) {
+				return handler(ctx, req)
+			}
+		}
 		return nil, err
 	}
 	newCtx := users.NewContext(ctx, auth)
