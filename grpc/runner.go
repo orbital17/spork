@@ -13,7 +13,9 @@ type Runner struct {
 }
 
 func NewRunner(users *Users) *Runner {
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(
+		withAuthInterceptor(),
+	)
 	RegisterUsersServer(grpcServer, users)
 	return &Runner{grpcServer}
 }

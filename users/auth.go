@@ -1,6 +1,7 @@
 package users
 
 import (
+	"context"
 	"strconv"
 	"time"
 
@@ -8,6 +9,10 @@ import (
 )
 
 var hs256 = jwt.NewHMAC(jwt.SHA256, []byte("jwtsecret"))
+
+type Auth struct {
+	UserID UserID
+}
 
 func NewToken(user User) (string, error) {
 	now := time.Now()
@@ -24,30 +29,43 @@ func NewToken(user User) (string, error) {
 	return string(token), nil
 }
 
-func ParseToken(tokenString string) (UserID, error) {
+func ParseToken(tokenString string) (auth *Auth, err error) {
 	raw, err := jwt.Parse([]byte(tokenString))
 	if err != nil {
-		return 0, err
+		return
 	}
 	if err = raw.Verify(hs256); err != nil {
-		return 0, err
+		return
 	}
 	var (
 		p jwt.Payload
 	)
 	_, err = raw.Decode(&p)
 	if err != nil {
-		return 0, err
+		return
 	}
 	now := time.Now()
 	iatValidator := jwt.IssuedAtValidator(now)
 	expValidator := jwt.ExpirationTimeValidator(now, true)
-	if err := p.Validate(iatValidator, expValidator); err != nil {
-		return 0, err
+	if err = p.Validate(iatValidator, expValidator); err != nil {
+		return
 	}
 	id, err := strconv.Atoi(p.Subject)
 	if err != nil {
-		return 0, err
+		return
 	}
-	return UserID(id), nil
+	return &Auth{UserID(id)}, nil
+}
+
+type contextKey int
+
+var authContextKey contextKey
+
+func NewContext(ctx context.Context, auth *Auth) context.Context {
+	return context.WithValue(ctx, authContextKey, auth)
+}
+
+func FromContext(ctx context.Context) (*Auth, bool) {
+	auth, ok := ctx.Value(authContextKey).(*Auth)
+	return auth, ok
 }

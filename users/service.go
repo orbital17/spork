@@ -58,10 +58,3 @@ func (service *Service) Login(
 	token, err = NewToken(user)
 	return
 }
-
-func Auth(token string) (
-	id UserID,
-	err error,
-) {
-	return
-}
