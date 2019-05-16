@@ -12,9 +12,9 @@ type Runner struct {
 	server *grpc.Server
 }
 
-func NewRunner(server *Server) *Runner {
+func NewRunner(users *Users) *Runner {
 	grpcServer := grpc.NewServer()
-	RegisterSporkServer(grpcServer, server)
+	RegisterUsersServer(grpcServer, users)
 	return &Runner{grpcServer}
 }
 

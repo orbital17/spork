@@ -19,8 +19,8 @@ func InitApp() *App {
 	db := postgres.Init(configConfig)
 	store := users.NewStore(db)
 	service := users.NewService(store)
-	server := grpc_api.NewServer(service, store)
-	runner := grpc_api.NewRunner(server)
+	grpc_apiUsers := grpc_api.NewUsersServer(service, store)
+	runner := grpc_api.NewRunner(grpc_apiUsers)
 	app := NewApp(runner)
 	return app
 }

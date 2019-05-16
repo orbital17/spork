@@ -17,7 +17,7 @@ func InitApp() *App {
 		postgres.Init,
 		users.NewStore,
 		users.NewService,
-		grpc.NewServer,
+		grpc.NewUsersServer,
 		grpc.NewRunner,
 		NewApp,
 	)

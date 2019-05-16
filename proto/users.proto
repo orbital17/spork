@@ -1,4 +1,5 @@
 syntax = "proto3";
+option go_package="grpc_api";
 
 message User {
     int64 id = 1;
@@ -6,10 +7,14 @@ message User {
     string name = 3;
 }
 
-service Spork {
+service Users {
     rpc Login(LoginRequest) returns (LoginResponse) {}
     rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {}
     rpc FindByEmail (FindByEmailRequest) returns (User) {}
+}
+
+service Postsf {
+    rpc GetPost (User) returns (User) {}
 }
 
 message LoginRequest {

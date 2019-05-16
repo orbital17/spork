@@ -27,16 +27,16 @@ func Auth(ctx context.Context) (userID users.UserID, err error) {
 	return id, nil
 }
 
-type Server struct {
+type Users struct {
 	UserService *users.Service
 	UserStore   *users.Store
 }
 
-func NewServer(userService *users.Service, userStore *users.Store) *Server {
-	return &Server{userService, userStore}
+func NewUsersServer(userService *users.Service, userStore *users.Store) *Users {
+	return &Users{userService, userStore}
 }
 
-func (s *Server) Login(ctx context.Context, req *LoginRequest) (*LoginResponse, error) {
+func (s *Users) Login(ctx context.Context, req *LoginRequest) (*LoginResponse, error) {
 	token, err := s.UserService.Login(req.Email, req.Password)
 	if err != nil {
 		return nil, err
@@ -44,11 +44,11 @@ func (s *Server) Login(ctx context.Context, req *LoginRequest) (*LoginResponse, 
 	return &LoginResponse{Token: token}, nil
 }
 
-func (*Server) CreateUser(ctx context.Context, req *CreateUserRequest) (*CreateUserResponse, error) {
+func (*Users) CreateUser(ctx context.Context, req *CreateUserRequest) (*CreateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
 }
 
-func (s *Server) FindByEmail(ctx context.Context, req *FindByEmailRequest) (*User, error) {
+func (s *Users) FindByEmail(ctx context.Context, req *FindByEmailRequest) (*User, error) {
 	_, err := Auth(ctx)
 	if err != nil {
 		return nil, err

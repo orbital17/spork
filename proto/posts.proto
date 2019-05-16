@@ -1,0 +1,8 @@
+syntax = "proto3";
+option go_package="grpc_api";
+
+message Empty {}
+
+service Posts {
+    rpc GetPost (Empty) returns (Empty) {}
+}
