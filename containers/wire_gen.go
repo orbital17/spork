@@ -20,7 +20,8 @@ func InitApp() *App {
 	store := users.NewStore(db)
 	service := users.NewService(store)
 	grpc_apiUsers := grpc_api.NewUsersServer(service, store)
-	runner := grpc_api.NewRunner(grpc_apiUsers, configConfig)
+	files := grpc_api.NewFilesServer()
+	runner := grpc_api.NewRunner(grpc_apiUsers, files, configConfig)
 	app := NewApp(runner)
 	return app
 }

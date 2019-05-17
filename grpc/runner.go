@@ -14,11 +14,12 @@ type Runner struct {
 	config *config.Config
 }
 
-func NewRunner(users *Users, c *config.Config) *Runner {
+func NewRunner(users *Users, files *Files, c *config.Config) *Runner {
 	grpcServer := grpc.NewServer(
 		withAuthInterceptor(),
 	)
 	RegisterUsersServer(grpcServer, users)
+	RegisterFilesServer(grpcServer, files)
 	return &Runner{grpcServer, c}
 }
 

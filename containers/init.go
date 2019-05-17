@@ -18,6 +18,7 @@ func InitApp() *App {
 		users.NewStore,
 		users.NewService,
 		grpc.NewUsersServer,
+		grpc.NewFilesServer,
 		grpc.NewRunner,
 		NewApp,
 	)
