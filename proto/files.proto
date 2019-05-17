@@ -1,0 +1,25 @@
+syntax = "proto3";
+option go_package="grpc_api";
+
+message UploadChunkRequest {
+    int64 fileId = 1;
+    int32 chunk = 2;
+    bytes bytes = 3;
+}
+
+message Status {
+    bool status = 1;
+}
+
+message InputFile {
+    int64 id = 1;
+    int32 chunks = 2;
+    string name = 3;
+}
+
+message FileLocation {}
+
+service Files {
+    rpc UploadChunk (UploadChunkRequest) returns (Status) {}
+    rpc Save (InputFile) returns (FileLocation) {}
+}
