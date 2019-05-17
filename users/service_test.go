@@ -28,7 +28,7 @@ func TestCreateUser(t *testing.T) {
 		"testpassword",
 		"o.tkachenkp",
 	)
-	if err.Error() == `pq: duplicate key value violates unique constraint "users_email_key"` {
+	if err != nil && err.Error() == `pq: duplicate key value violates unique constraint "users_email_key"` {
 		t.SkipNow()
 	}
 	check(err)
@@ -66,9 +66,9 @@ func TestToken(t *testing.T) {
 	})
 	check(err)
 	// t.Logf("user token: %v", token)
-	parsedId, err := ParseToken(token)
+	auth, err := ParseToken(token)
 	check(err)
-	if id != parsedId {
+	if id != auth.UserID {
 		t.Fail()
 	}
 	// t.Logf("user id: %v", id)
