@@ -8,6 +8,6 @@ type Config struct {
 func Default() *Config {
 	return &Config{
 		PostgresConnStr: "user=postgres password=postgres dbname=postgres sslmode=disable",
-		GrpcPort:        8080,
+		GrpcPort:        9090,
 	}
 }

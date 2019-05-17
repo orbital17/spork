@@ -6,7 +6,6 @@ services:
       dockerfile: ./docker/envoy/Dockerfile
     ports:
       - 8080:8080
-      - 9090:9090
   postgres:
     image: postgres
     ports:
