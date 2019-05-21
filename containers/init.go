@@ -6,6 +6,7 @@ import (
 	"spork/config"
 	grpc "spork/grpc"
 	"spork/postgres"
+	"spork/rest"
 	"spork/users"
 
 	"github.com/google/wire"
@@ -20,6 +21,7 @@ func InitApp() *App {
 		grpc.NewUsersServer,
 		grpc.NewFilesServer,
 		grpc.NewRunner,
+		rest.NewServer,
 		NewApp,
 	)
 	return &App{}

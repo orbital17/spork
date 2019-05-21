@@ -9,6 +9,7 @@ import (
 	"spork/config"
 	"spork/grpc"
 	"spork/postgres"
+	"spork/rest"
 	"spork/users"
 )
 
@@ -22,6 +23,7 @@ func InitApp() *App {
 	grpc_apiUsers := grpc_api.NewUsersServer(service, store)
 	files := grpc_api.NewFilesServer()
 	runner := grpc_api.NewRunner(grpc_apiUsers, files, configConfig)
-	app := NewApp(runner)
+	server := rest.NewServer(configConfig, service)
+	app := NewApp(runner, server)
 	return app
 }

@@ -29,7 +29,7 @@ func (runner *Runner) Run() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	fmt.Printf("listening to :%v\n", port)
+	fmt.Printf("grpc listening to :%v\n", port)
 	err = runner.server.Serve(lis)
 	if err != nil {
 		log.Fatalf("failed to run the server: %v", err)
