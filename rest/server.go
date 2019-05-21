@@ -21,8 +21,10 @@ func NewServer(cfg *config.Config, users *users.Service) *Server {
 }
 
 func (r *Server) Serve() {
+	imageRouter := &ImageRouter{}
 	router := http.NewServeMux()
 	router.Handle("/api/users/", http.StripPrefix("/api/users", r.userRouter.routes()))
+	router.Handle("/api/images/", http.StripPrefix("/api/images", imageRouter.routes()))
 	port := fmt.Sprintf(":%v", r.config.RestPort)
 	fmt.Printf("rest listening to %v\n", port)
 	log.Fatal(http.ListenAndServe(port, router))
