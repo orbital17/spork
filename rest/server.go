@@ -21,8 +21,9 @@ func NewServer(cfg *config.Config, users *users.Service) *Server {
 }
 
 func (r *Server) Serve() {
-	r.userRouter.routes()
+	router := http.NewServeMux()
+	router.Handle("/api/users/", http.StripPrefix("/api/users", r.userRouter.routes()))
 	port := fmt.Sprintf(":%v", r.config.RestPort)
 	fmt.Printf("rest listening to %v\n", port)
-	log.Fatal(http.ListenAndServe(port, nil))
+	log.Fatal(http.ListenAndServe(port, router))
 }

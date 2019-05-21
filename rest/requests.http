@@ -1,8 +1,8 @@
 
-POST http://localhost:8000/api/login HTTP/1.1
+POST http://localhost:8000/api/users/login HTTP/1.1
 content-type: application/json
 
 {
-    "Email": "olexiy.tkachenko@gmail.com",
+    "Email": "olexiy.tkachenko+3@gmail.com",
     "Password": "testpassword"
 }
