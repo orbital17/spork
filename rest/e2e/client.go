@@ -19,18 +19,21 @@ type Client struct {
 	token string
 }
 
+type Credentials struct {
+	Email    string
+	Password string
+}
+
 func NewClient() *Client {
 	return &Client{}
 }
 
-func (c *Client) Login() (ok bool) {
+func (c *Client) Login(creds Credentials) (ok bool) {
 	type response struct {
 		Token string
 	}
-	body, err := c.makeRequest(request{
-		`/users/login`,
-		`{"Email": "olexiy.tkachenko+3@gmail.com","Passwoerd": "testpassword"}`,
-	})
+	js, _ := json.Marshal(creds)
+	body, err := c.makeRequest(request{`/account/login`, string(js)})
 	if err != nil {
 		log.Fatal(err)
 		return false
