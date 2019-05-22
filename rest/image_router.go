@@ -12,7 +12,7 @@ type ImageRouter struct {
 
 func (s *ImageRouter) routes() *http.ServeMux {
 	router := http.NewServeMux()
-	router.HandleFunc("/upload", s.handleUpload())
+	router.HandleFunc("/upload", Auth(s.handleUpload()))
 	return router
 }
 

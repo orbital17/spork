@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"spork/users"
+	"strings"
 )
 
 func checkJsonError(w http.ResponseWriter, err error) (ok bool) {
@@ -49,4 +51,23 @@ func writeError(w http.ResponseWriter, err string) {
 		"error": err,
 	})
 	_, _ = w.Write(js)
+}
+
+func Auth(handler http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		header := r.Header.Get("authorization")
+		if len(header) < 8 || strings.ToLower(header[0:7]) != "bearer " {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		token := header[7:]
+		auth, err := users.ParseToken(token)
+		if err != nil {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		newContext := users.NewContext(r.Context(), auth)
+		newRequest := r.WithContext(newContext)
+		handler(w, newRequest)
+	}
 }

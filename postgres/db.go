@@ -13,5 +13,6 @@ func Init(config *config.Config) *sql.DB {
 	if err != nil {
 		log.Fatal("cannot connect to db")
 	}
+	//TODO: test query
 	return db
 }

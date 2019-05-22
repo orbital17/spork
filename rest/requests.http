@@ -9,6 +9,7 @@ content-type: application/json
 
 ###
 POST http://localhost:8000/api/images/upload
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNTYxMTA2MTM2LCJpYXQiOjE1NTg1MTQxMzZ9.oT9e8jP8T6XnpYPyB1tdArcqv56f3fis7MZRkKGwn_g
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
