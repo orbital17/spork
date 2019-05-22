@@ -1,9 +1,7 @@
 package users
 
-type UserID int64
-
 type User struct {
-	Id           UserID
+	Id           int64
 	Email        string
 	Name         string
 	PasswordHash string

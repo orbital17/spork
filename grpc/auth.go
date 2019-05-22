@@ -2,7 +2,7 @@ package grpc_api
 
 import (
 	context "context"
-	"spork/users"
+	authentication "spork/auth"
 
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -10,7 +10,7 @@ import (
 	status "google.golang.org/grpc/status"
 )
 
-func auth(ctx context.Context) (auth *users.Auth, err error) {
+func auth(ctx context.Context) (auth *authentication.Auth, err error) {
 	err = status.Errorf(codes.Unauthenticated, "auth failed")
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
@@ -21,7 +21,7 @@ func auth(ctx context.Context) (auth *users.Auth, err error) {
 		return
 	}
 	token := arr[0]
-	auth, parseErr := users.ParseToken(token)
+	auth, parseErr := authentication.ParseToken(token)
 	if parseErr != nil {
 		return
 	}
@@ -47,7 +47,7 @@ func authUnaryInterceptor(
 		}
 		return nil, err
 	}
-	newCtx := users.NewContext(ctx, auth)
+	newCtx := authentication.NewContext(ctx, auth)
 	return handler(newCtx, req)
 }
 

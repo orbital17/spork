@@ -3,6 +3,7 @@ package users
 import (
 	"errors"
 	"regexp"
+	"spork/auth"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -23,7 +24,7 @@ func (service *Service) CreateUser(
 	password string,
 	name string,
 ) (
-	id UserID,
+	id int64,
 	err error,
 ) {
 	if !emailRegexp.MatchString(email) {
@@ -55,6 +56,6 @@ func (service *Service) Login(
 	if err != nil {
 		return
 	}
-	token, err = NewToken(user)
+	token, err = auth.NewToken(auth.Auth{user.Id})
 	return
 }

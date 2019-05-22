@@ -58,18 +58,3 @@ func TestLogin(t *testing.T) {
 	}
 	// log.Printf("user token: %v", token)
 }
-
-func TestToken(t *testing.T) {
-	id := UserID(345)
-	token, err := NewToken(User{
-		Id: id,
-	})
-	check(err)
-	// t.Logf("user token: %v", token)
-	auth, err := ParseToken(token)
-	check(err)
-	if id != auth.UserID {
-		t.Fail()
-	}
-	// t.Logf("user id: %v", id)
-}

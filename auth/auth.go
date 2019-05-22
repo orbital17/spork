@@ -1,4 +1,4 @@
-package users
+package auth
 
 import (
 	"context"
@@ -11,14 +11,14 @@ import (
 var hs256 = jwt.NewHMAC(jwt.SHA256, []byte("jwtsecret"))
 
 type Auth struct {
-	UserID UserID
+	UserID int64
 }
 
-func NewToken(user User) (string, error) {
+func NewToken(auth Auth) (string, error) {
 	now := time.Now()
 	h := jwt.Header{}
 	p := jwt.Payload{
-		Subject:        strconv.Itoa(int(user.Id)),
+		Subject:        strconv.FormatInt(auth.UserID, 10),
 		ExpirationTime: now.Add(24 * 30 * time.Hour).Unix(),
 		IssuedAt:       now.Unix(),
 	}
@@ -50,11 +50,11 @@ func ParseToken(tokenString string) (auth *Auth, err error) {
 	if err = p.Validate(iatValidator, expValidator); err != nil {
 		return
 	}
-	id, err := strconv.Atoi(p.Subject)
+	id, err := strconv.ParseInt(p.Subject, 10, 64)
 	if err != nil {
 		return
 	}
-	return &Auth{UserID(id)}, nil
+	return &Auth{id}, nil
 }
 
 type contextKey int

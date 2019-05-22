@@ -10,7 +10,7 @@ func NewStore(db *sql.DB) *Store {
 	return &Store{db}
 }
 
-func (store *Store) AddUser(u User) (id UserID, err error) {
+func (store *Store) AddUser(u User) (id int64, err error) {
 
 	query := `INSERT INTO
 	  postgres.public.users (date_added, name, password, email)
@@ -24,7 +24,7 @@ func (store *Store) AddUser(u User) (id UserID, err error) {
 	res := store.db.QueryRow(query, u.Name, u.PasswordHash, u.Email)
 	var lastID int64
 	err = res.Scan(&lastID)
-	return UserID(lastID), err
+	return int64(lastID), err
 }
 
 func (store *Store) UserByEmail(email string) (User, error) {

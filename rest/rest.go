@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"spork/users"
+	"spork/auth"
 	"strings"
 )
 
@@ -61,12 +61,12 @@ func Auth(handler http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 		token := header[7:]
-		auth, err := users.ParseToken(token)
+		authObj, err := auth.ParseToken(token)
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
-		newContext := users.NewContext(r.Context(), auth)
+		newContext := auth.NewContext(r.Context(), authObj)
 		newRequest := r.WithContext(newContext)
 		handler(w, newRequest)
 	}
