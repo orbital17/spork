@@ -8,7 +8,6 @@ import (
 	"log"
 	"net/http"
 	"strings"
-	"testing"
 )
 
 type request struct {
@@ -20,9 +19,11 @@ type Client struct {
 	token string
 }
 
-var client Client
+func NewClient() *Client {
+	return &Client{}
+}
 
-func (c *Client) login() (ok bool) {
+func (c *Client) Login() (ok bool) {
 	type response struct {
 		Token string
 	}
@@ -67,10 +68,4 @@ func (c *Client) makeRequest(r request) ([]byte, error) {
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	return body, err
-}
-
-func TestLogin(t *testing.T) {
-	if !client.login() {
-		t.Fail()
-	}
 }
