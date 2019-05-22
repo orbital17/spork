@@ -2,6 +2,7 @@ package grpc_api
 
 import (
 	context "context"
+	"spork/account"
 	"spork/users"
 
 	codes "google.golang.org/grpc/codes"
@@ -9,16 +10,16 @@ import (
 )
 
 type Users struct {
-	UserService *users.Service
-	UserStore   *users.Store
+	AccountService *account.Service
+	UserStore      *users.Store
 }
 
-func NewUsersServer(userService *users.Service, userStore *users.Store) *Users {
-	return &Users{userService, userStore}
+func NewUsersServer(AccountService *account.Service, userStore *users.Store) *Users {
+	return &Users{AccountService, userStore}
 }
 
 func (s *Users) Login(ctx context.Context, req *LoginRequest) (*LoginResponse, error) {
-	token, err := s.UserService.Login(req.Email, req.Password)
+	token, err := s.AccountService.Login(req.Email, req.Password)
 	if err != nil {
 		return nil, err
 	}

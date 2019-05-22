@@ -1,9 +1,10 @@
-package users
+package account
 
 import (
 	"errors"
 	"regexp"
 	"spork/auth"
+	"spork/users"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -12,14 +13,14 @@ var emailRegexp = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0
 var ErrBadEmailFormat = errors.New("invalid email format")
 
 type Service struct {
-	store *Store
+	store *users.Store
 }
 
-func NewService(store *Store) *Service {
+func NewService(store *users.Store) *Service {
 	return &Service{store}
 }
 
-func (service *Service) CreateUser(
+func (service *Service) Create(
 	email string,
 	password string,
 	name string,
@@ -34,7 +35,7 @@ func (service *Service) CreateUser(
 	if err != nil {
 		return
 	}
-	return service.store.AddUser(User{
+	return service.store.AddUser(users.User{
 		Email:        email,
 		PasswordHash: string(hash),
 		Name:         name,

@@ -3,6 +3,7 @@
 package containers
 
 import (
+	"spork/account"
 	"spork/config"
 	grpc "spork/grpc"
 	"spork/postgres"
@@ -17,7 +18,7 @@ func InitApp() *App {
 		config.Default,
 		postgres.Init,
 		users.NewStore,
-		users.NewService,
+		account.NewService,
 		grpc.NewUsersServer,
 		grpc.NewFilesServer,
 		grpc.NewRunner,

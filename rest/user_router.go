@@ -2,20 +2,20 @@ package rest
 
 import (
 	"net/http"
-	"spork/users"
+	"spork/account"
 )
 
-type UserRouter struct {
-	service *users.Service
+type AccountRouter struct {
+	service *account.Service
 }
 
-func (s *UserRouter) routes() *http.ServeMux {
+func (s *AccountRouter) routes() *http.ServeMux {
 	router := http.NewServeMux()
 	router.HandleFunc("/login", s.handleLogin())
 	return router
 }
 
-func (s *UserRouter) handleLogin() http.HandlerFunc {
+func (s *AccountRouter) handleLogin() http.HandlerFunc {
 	type request struct {
 		Email    string
 		Password string

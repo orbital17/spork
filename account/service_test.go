@@ -1,9 +1,10 @@
-package users
+package account
 
 import (
 	"log"
 	"spork/config"
 	"spork/postgres"
+	"spork/users"
 	"testing"
 )
 
@@ -18,12 +19,12 @@ var service *Service
 func init() {
 	config := config.Default()
 	db := postgres.Init(config)
-	store := NewStore(db)
+	store := users.NewStore(db)
 	service = NewService(store)
 }
 
 func TestCreateUser(t *testing.T) {
-	id, err := service.CreateUser(
+	id, err := service.Create(
 		"olexiy.tkachenko+3@gmail.com",
 		"testpassword",
 		"o.tkachenkp",
