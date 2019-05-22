@@ -71,3 +71,8 @@ func Auth(handler http.HandlerFunc) http.HandlerFunc {
 		handler(w, newRequest)
 	}
 }
+
+func GetUserID(r *http.Request) int64 {
+	authObj, _ := auth.FromContext(r.Context())
+	return authObj.UserID
+}

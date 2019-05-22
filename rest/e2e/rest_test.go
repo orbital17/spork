@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -15,4 +16,10 @@ func TestLogin(t *testing.T) {
 	if !client.Login(creds) {
 		t.Fail()
 	}
+}
+
+func TestMe(t *testing.T) {
+	client.EnsureLogin(creds)
+	res := client.Me()
+	fmt.Println(res)
 }

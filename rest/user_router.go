@@ -12,6 +12,7 @@ type AccountRouter struct {
 func (s *AccountRouter) routes() *http.ServeMux {
 	router := http.NewServeMux()
 	router.HandleFunc("/login", s.handleLogin())
+	router.HandleFunc("/me", Auth(s.handleMe()))
 	return router
 }
 
@@ -33,5 +34,20 @@ func (s *AccountRouter) handleLogin() http.HandlerFunc {
 			return
 		}
 		WriteJson(w, &response{token})
+	}
+}
+
+func (s *AccountRouter) handleMe() http.HandlerFunc {
+	type response struct {
+		Id   int64  `json:"id"`
+		Test string `json:"test"`
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := GetUserID(r)
+		user, err := s.service.GetById(id)
+		if !checkInternalError(w, err) {
+			return
+		}
+		WriteJson(w, &response{user.Id, "jflkds"})
 	}
 }

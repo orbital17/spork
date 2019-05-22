@@ -43,3 +43,20 @@ func (store *Store) UserByEmail(email string) (User, error) {
 	)
 	return u, err
 }
+
+func (store *Store) GetById(id int64) (User, error) {
+	query := `select
+		id, name, email, password
+	from
+		users
+	where id = $1; `
+	res := store.db.QueryRow(query, id)
+	var u User
+	err := res.Scan(
+		&u.Id,
+		&u.Name,
+		&u.Email,
+		&u.PasswordHash,
+	)
+	return u, err
+}

@@ -10,13 +10,13 @@ import (
 	"strings"
 )
 
-type request struct {
-	route string
-	body  string
+type Request struct {
+	Route string
+	Body  string
 }
 
 type Client struct {
-	token string
+	Token string
 }
 
 type Credentials struct {
@@ -33,7 +33,7 @@ func (c *Client) Login(creds Credentials) (ok bool) {
 		Token string
 	}
 	js, _ := json.Marshal(creds)
-	body, err := c.makeRequest(request{`/account/login`, string(js)})
+	body, err := c.MakeRequest(Request{`/account/login`, string(js)})
 	if err != nil {
 		log.Fatal(err)
 		return false
@@ -45,21 +45,42 @@ func (c *Client) Login(creds Credentials) (ok bool) {
 		return false
 	}
 	if len(res.Token) > 0 {
-		c.token = res.Token
+		c.Token = res.Token
 		return true
 	}
 	return false
 }
 
-func (c *Client) makeRequest(r request) ([]byte, error) {
-	endpoint := "http://localhost:8000/api"
-	url := endpoint + r.route
+func (c *Client) EnsureLogin(creds Credentials) {
+	if len(c.Token) == 0 {
+		c.Login(creds)
+	}
+}
 
-	payload := strings.NewReader(r.body)
+func (c *Client) Logout() {
+	c.Token = ""
+}
+
+func (c *Client) Me() (me string) {
+	me = ""
+	body, err := c.MakeRequest(Request{Route: `/account/me`})
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	return string(body)
+}
+
+func (c *Client) MakeRequest(r Request) ([]byte, error) {
+	endpoint := "http://localhost:8000/api"
+	url := endpoint + r.Route
+
+	payload := strings.NewReader(r.Body)
 
 	req, _ := http.NewRequest("POST", url, payload)
 
 	req.Header.Add("content-type", "application/json")
+	req.Header.Add("authorization", "Bearer "+c.Token)
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {

@@ -57,6 +57,16 @@ func (service *Service) Login(
 	if err != nil {
 		return
 	}
-	token, err = auth.NewToken(auth.Auth{user.Id})
+	token, err = auth.NewToken(auth.Auth{UserID: user.Id})
+	return
+}
+
+func (service *Service) GetById(
+	id int64,
+) (
+	user users.User,
+	err error,
+) {
+	user, err = service.store.GetById(id)
 	return
 }
